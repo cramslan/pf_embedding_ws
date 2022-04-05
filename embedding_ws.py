@@ -1,16 +1,15 @@
 
 import logging
 from flask import Flask, request, abort
-from rfiEmbedding import RFICalculator
+from rfiEmbeddingGen import RFICalculator
 from io import StringIO
 
 
 app = Flask(__name__)
 log = logging.getLogger('werkzeug')
-# turn off logging so can see output better:
 log.setLevel(logging.ERROR)
 
-@app.route('/calculation/', methods=['GET', 'POST'])
+@app.route('/findembedding/', methods=['GET', 'POST'])
 def flask_find_outliers():
     if request.method == 'POST':
         obj = request.form
@@ -21,17 +20,14 @@ def flask_find_outliers():
     if tsv is None:
         tsv = request.files.get('tsv').read().decode('UTF-8')
 
+    numDesc = obj.get('NumDesc')
+    if numDesc is None:
+        numDesc = 12
+
     instance = RFICalculator()
-    jsonobj = instance.findEmbedding(StringIO(tsv))
+    jsonobj = instance.findEmbedding(StringIO(tsv), numDesc)
 
     return jsonobj
-
-@app.route('/printstring/', methods=['GET'])
-def printstring():
-    obj = request.args
-    string = obj.get('string')
-    print(string)
-    return None
 
 
 if __name__ == '__main__':
