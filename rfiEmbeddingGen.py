@@ -28,7 +28,7 @@ class RFICalculator:
     def importSplit(self, tsv, yLabel, **kwargs):
         ## Import method designed to handle tsvs
         # self.dfFull = pd.read_csv(tsvPath, delimiter='\t', **kwargs)
-        self.dfFull = tsv
+        self.dfFull = pd.read_csv(tsv, delimiter='\t')
         self.X_full = self.dfFull.drop(['ID', yLabel], axis=1)
         self.Y_full = self.dfFull[yLabel]
 
